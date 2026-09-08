@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucas Camargo — Engenharia de Software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #12141a;
+    --surface: #1a1d26;
+    --surface-raised: #20232e;
+    --line: #2b2f3c;
+    --text: #eaecef;
+    --muted: #8b92a3;
+    --accent: #ff7a45;
+    --accent-dim: #7a4028;
+    --teal: #5fd9c0;
+    --teal-dim: #2b5952;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  a { color: inherit; }
+
+  ::selection { background: var(--accent); color: var(--ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(18, 20, 26, 0.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .nav .logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav .logo span { color: var(--accent); }
+  .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    font-family: var(--mono);
+    font-size: 13.5px;
+  }
+  .nav a { text-decoration: none; color: var(--muted); transition: color 0.15s ease; }
+  .nav a:hover { color: var(--text); }
+  .nav-toggle { display: none; }
+
+  @media (max-width: 640px) {
+    .nav ul { gap: 16px; }
+    .nav ul li:nth-child(3) { display: none; }
+  }
+
+  /* HERO / TERMINAL */
+  .hero { padding: 72px 0 56px; }
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -30px rgba(0,0,0,0.6);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--line);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #3a3f4d; }
+  .terminal-title {
+    margin-left: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .terminal-body {
+    padding: 28px 24px 30px;
+    font-family: var(--mono);
+    font-size: 15px;
+  }
+  .terminal-body .row { margin: 0 0 6px; white-space: pre-wrap; }
+  .prompt { color: var(--teal); }
+  .cmd { color: var(--text); }
+  .out { color: var(--muted); }
+  .out strong { color: var(--text); font-weight: 500; }
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: var(--accent);
+    margin-left: 4px;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  h1.name {
+    font-family: var(--display);
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 28px 0 6px;
+  }
+  .role {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 15px;
+    margin: 0 0 20px;
+  }
+  .lede {
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  .hero-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn.primary {
+    background: var(--accent);
+    color: #1a0f08;
+    border-color: var(--accent);
+    font-weight: 500;
+  }
+  .btn.primary:hover { background: #ff8a5c; }
+  .btn.ghost { color: var(--text); }
+  .btn.ghost:hover { border-color: var(--muted); }
+
+  /* SECTIONS */
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .section-head .tag {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--teal);
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: 1.7rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* PERFIL */
+  .perfil p { max-width: 68ch; color: var(--text); font-size: 1.02rem; }
+  .perfil .highlight { color: var(--teal); font-weight: 500; }
+
+  /* STACK */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 28px;
+  }
+  .stack-group h3 {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    color: var(--text);
+  }
+
+  /* PROJETOS */
+  .projects { display: flex; flex-direction: column; gap: 20px; }
+  .project {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .project-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--line);
+  }
+  .project-bar .file {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .project-bar .badge {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 4px;
+  }
+  .badge.web { background: var(--teal-dim); color: var(--teal); }
+  .badge.core { background: var(--accent-dim); color: var(--accent); }
+  .project-body { padding: 20px 22px 24px; }
+  .project-body h3 {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .project-body p { color: var(--muted); margin: 0; max-width: 66ch; }
+
+  /* FORMAÇÃO */
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: var(--line);
+  }
+  .tl-item { position: relative; margin-bottom: 30px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--teal);
+  }
+  .tl-item h3 {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .tl-item .meta {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .tl-item p { color: var(--muted); margin: 0; max-width: 64ch; }
+
+  /* CONTATO */
+  .contact-terminal .terminal-body { font-size: 14px; }
+  .contact-list {
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .contact-list a {
+    display: block;
+    text-decoration: none;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .contact-list a:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .contact-list .k {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .contact-list .v { font-size: 14.5px; color: var(--text); word-break: break-word; }
+
+  footer {
+    padding: 28px 0 40px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap nav">
+    <a href="#top" class="logo">lucas<span>@</span>camargo</a>
+    <ul>
+      <li><a href="#perfil">perfil</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#projetos">projetos</a></li>
+      <li><a href="#formacao">formação</a></li>
+      <li><a href="#contato">contato</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="terminal-title">zsh — ~/lucas</span>
+      </div>
+      <div class="terminal-body">
+        <p class="row"><span class="prompt">lucas@unifei</span><span class="out">:~$</span> <span class="cmd">whoami</span></p>
+        <p class="row out">Estudante de Engenharia de Software, <strong>2º período</strong> — UNIFEI</p>
+        <p class="row"><span class="prompt">lucas@unifei</span><span class="out">:~$</span> <span class="cmd">cat status.txt</span></p>
+        <p class="row out">Buscando estágio em Engenharia / Desenvolvimento de Software<span class="cursor" aria-hidden="true"></span></p>
+      </div>
+    </div>
+
+    <h1 class="name">Lucas Camargo</h1>
+    <p class="role">Engenharia de Software — UNIFEI · Pouso Alegre, MG</p>
+    <p class="lede">
+      Programo em C e C++, monto interfaces em HTML, CSS e JavaScript, e gosto de
+      transformar um problema real em algo que roda. Agora estou procurando um
+      estágio onde eu possa aprender com um time de verdade.
+    </p>
+    <div class="hero-links">
+      <a class="btn primary" href="#contato">Falar comigo</a>
+      <a class="btn ghost" href="#projetos">Ver projetos</a>
+      <a class="btn ghost" href="https://linkedin.com/in/lucas-camargo-9bb64a3ab" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </section>
+
+  <section id="perfil" class="perfil">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">01</span>
+        <h2>Perfil</h2>
+      </div>
+      <p>
+        Curso Engenharia de Software na <span class="highlight">Universidade Federal de Itajubá (UNIFEI)</span>,
+        com base construída em C/C++, lógica de programação, algoritmos e estruturas
+        de dados — e prática crescente em desenvolvimento web e integração de APIs.
+        Meu jeito de trabalhar é analítico e direto ao problema: entendo o que precisa
+        ser resolvido antes de sair escrevendo código. Estou procurando uma vaga de
+        estágio para aplicar o que aprendi em sala em algo com uso real, e evoluir ao
+        lado de quem já faz isso todos os dias.
+      </p>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">02</span>
+        <h2>Stack</h2>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-group">
+          <h3>linguagens</h3>
+          <div class="chips">
+            <span class="chip">C</span>
+            <span class="chip">C++</span>
+            <span class="chip">JavaScript</span>
+          </div>
+        </div>
+        <div class="stack-group">
+          <h3>web</h3>
+          <div class="chips">
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+            <span class="chip">APIs</span>
+          </div>
+        </div>
+        <div class="stack-group">
+          <h3>fundamentos</h3>
+          <div class="chips">
+            <span class="chip">Algoritmos</span>
+            <span class="chip">Estruturas de dados</span>
+            <span class="chip">Lógica de programação</span>
+          </div>
+        </div>
+        <div class="stack-group">
+          <h3>ferramentas</h3>
+          <div class="chips">
+            <span class="chip">Git / GitHub</span>
+            <span class="chip">VS Code</span>
+            <span class="chip">Low-code / no-code</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projetos">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">03</span>
+        <h2>Projetos</h2>
+      </div>
+      <div class="projects">
+        <div class="project">
+          <div class="project-bar">
+            <span class="file">patinha-em-dia/</span>
+            <span class="badge web">web</span>
+          </div>
+          <div class="project-body">
+            <h3>Patinha em Dia — Carteirinha de Vacinação Digital para Pets</h3>
+            <p>
+              Plataforma web para acompanhar a saúde preventiva de pets: carteira de
+              vacinação digital, busca de clínicas por localização, agendamento de
+              consultas e lembretes automáticos. Foco em organizar bem as
+              funcionalidades e deixar a experiência simples para quem só quer saber
+              se a vacina do pet está em dia.
+            </p>
+          </div>
+        </div>
+        <div class="project">
+          <div class="project-bar">
+            <span class="file">algoritmos-e-estruturas/</span>
+            <span class="badge core">c / c++</span>
+          </div>
+          <div class="project-body">
+            <h3>Projetos de Programação e Engenharia de Software</h3>
+            <p>
+              Conjunto de algoritmos e soluções computacionais em C e C++,
+              desenvolvidos ao longo da faculdade para praticar lógica de
+              programação, estruturas de dados e boas práticas de engenharia de
+              software na resolução de problemas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="formacao">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">04</span>
+        <h2>Formação &amp; certificações</h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <h3>Bacharelado em Engenharia de Software</h3>
+          <p class="meta">Universidade Federal de Itajubá (UNIFEI) · cursando, 2º período</p>
+          <p>Formação com foco em programação, algoritmos, estruturas de dados,
+          engenharia de software e desenvolvimento de soluções computacionais.</p>
+        </div>
+        <div class="tl-item">
+          <h3>AWS Educate — Introduction to Cloud 101</h3>
+          <p class="meta">Amazon Web Services Training and Certification · 2026</p>
+          <p>Fundamentos de computação em nuvem pela AWS Educate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="contact-terminal">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">05</span>
+        <h2>Contato</h2>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">contato.sh</span>
+        </div>
+        <div class="terminal-body">
+          <p class="row"><span class="prompt">lucas@unifei</span><span class="out">:~$</span> <span class="cmd">./contato.sh</span></p>
+          <p class="row out">Abrindo canais de contato...</p>
+        </div>
+      </div>
+      <div class="contact-list">
+        <a href="mailto:lucascamargo10amanda@gmail.com">
+          <span class="k">email</span>
+          <span class="v">lucascamargo10amanda@gmail.com</span>
+        </a>
+        <a href="tel:+5512991213552">
+          <span class="k">telefone</span>
+          <span class="v">(12) 99121-3552</span>
+        </a>
+        <a href="https://linkedin.com/in/lucas-camargo-9bb64a3ab" target="_blank" rel="noopener">
+          <span class="k">linkedin</span>
+          <span class="v">/in/lucas-camargo-9bb64a3ab</span>
+        </a>
+        <a href="#top">
+          <span class="k">localização</span>
+          <span class="v">Pouso Alegre, MG</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  feito por Lucas Camargo · atualizado em 2026
+</footer>
+
+</body>
+</html>
